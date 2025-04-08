@@ -42,7 +42,7 @@ class OrderController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $user = Auth::user();
@@ -51,7 +51,8 @@ class OrderController extends Controller
                 throw new \RuntimeException('User not authenticated');
             }
 
-            $orders = $this->getOrdersByUserRole($user);
+            $status = $request->query('status');
+            $orders = $this->getOrdersByUserRole($user, $status);
 
             return response()->json([
                 'success' => true,
@@ -192,12 +193,15 @@ class OrderController extends Controller
      * @param User $user
      * @return Collection
      */
-    private function getOrdersByUserRole(User $user): Collection
+    private function getOrdersByUserRole(User $user, ?string $status = null): Collection
     {
-        if ($user->is_admin) {
-            return Order::with(['items', 'user'])->get();
+        $query = $user->is_admin ? Order::query() : $user->orders();
+
+        if ($status && in_array($status, self::VALID_STATUSES)) {
+            $query->where('status', $status);
         }
-        return $user->orders()->with('items')->get();
+
+        return $query->with('items')->get();
     }
 
     /**

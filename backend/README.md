@@ -268,7 +268,7 @@ Response:
 
 ### Get Current User Orders
 ```bash
-GET /api/orders
+GET /api/orders?status={status}
 ```
 
 Response:

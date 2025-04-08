@@ -145,6 +145,66 @@ All endpoints below require Authorization header:
 
 Authorization: Bearer {token}
 
+### Fetch Items
+```bash
+GET /api/items                    // Default sorting (asc) and pagination (10 items)
+GET /api/items?sort=desc         // Sort by price descending
+GET /api/items?page=2            // Get second page
+GET /api/items?per_page=20       // Show 20 items per page
+GET /api/items?sort=desc&page=2   // Combine parameters
+```
+Response body
+```bash
+{
+    "success": true,
+    "data": {
+        "items": [
+            {
+                "id": 4,
+                "name": "USB-C Hub",
+                "price": "29.99",
+                "created_at": "2025-04-08T04:50:55.000000Z",
+                "updated_at": "2025-04-08T04:50:55.000000Z"
+            },
+            {
+                "id": 1,
+                "name": "Gaming Mouse",
+                "price": "49.99",
+                "created_at": "2025-04-08T04:50:55.000000Z",
+                "updated_at": "2025-04-08T04:50:55.000000Z"
+            },
+            {
+                "id": 2,
+                "name": "Mechanical Keyboard",
+                "price": "89.99",
+                "created_at": "2025-04-08T04:50:55.000000Z",
+                "updated_at": "2025-04-08T04:50:55.000000Z"
+            },
+            {
+                "id": 5,
+                "name": "Wireless Headset",
+                "price": "119.99",
+                "created_at": "2025-04-08T04:50:55.000000Z",
+                "updated_at": "2025-04-08T04:50:55.000000Z"
+            },
+            {
+                "id": 3,
+                "name": "4K Monitor",
+                "price": "299.99",
+                "created_at": "2025-04-08T04:50:55.000000Z",
+                "updated_at": "2025-04-08T04:50:55.000000Z"
+            }
+        ],
+        "pagination": {
+            "current_page": 1,
+            "per_page": 10,
+            "total": 5,
+            "last_page": 1,
+            "has_more": false
+        }
+    }
+}
+```
 
 ### Create Order (User only)
 ```bash

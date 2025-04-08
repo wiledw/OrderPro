@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('order_status_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->string('from_status')->nullable(); // NULL on initial creation
+            $table->string('from_status')->nullable();
             $table->string('to_status');
-            $table->foreignId('changed_by')->constrained('users')->onDelete('cascade'); // admin or user
-            $table->timestamps(); // includes created_at (the timestamp we want)
+            $table->foreignId('changed_by')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

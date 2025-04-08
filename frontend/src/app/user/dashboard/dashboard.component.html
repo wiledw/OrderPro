@@ -1,0 +1,91 @@
+<div class="dashboard-container">
+  <header>
+    <div class="header-content">
+      <div class="user-info">
+        <h1 *ngIf="user">Welcome, {{ user.name }}!</h1>
+        <div *ngIf="!user && !loading" class="error">User information not available.</div>
+        <div *ngIf="loading" class="loading">Loading user information...</div>
+        <div *ngIf="error" class="error">{{ error }}</div>
+      </div>
+    </div>
+
+    <div class="filter">
+      <label for="status">Filter Order by Status:</label>
+      <select id="status" (change)="handleInput($event)">
+        <option value="">All</option>
+        <option value="pending">Pending</option>
+        <option value="processing">Processing</option>
+        <option value="shipped">Shipped</option>
+        <option value="delivered">Delivered</option>
+      </select>
+    </div>
+  </header>
+  <div class="dashboard-content">
+    <div class="loading" *ngIf="loading">Loading orders...</div>
+    <div class="error" *ngIf="error">{{ error }}</div>
+
+    <div class="orders-grid" *ngIf="!loading && !error">
+      <!-- Orders List -->
+      <div class="orders-list">
+        <div class="order-card" 
+             *ngFor="let order of filteredOrders"
+             [class.selected]="selectedOrder?.id === order.id"
+             (click)="selectOrder(order)">
+          <div class="order-header">
+            <span class="order-id">Order #{{ order.id }}</span>
+            <span class="order-status" [class]="order?.status">{{ order?.status }}</span>
+          </div>
+          <div class="order-info">
+            <div>Total: ${{ order.total_amount }}</div>
+            <div class="order-date">{{ formatDate(order.created_at) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Details -->
+      <div class="order-details" *ngIf="selectedOrder">
+        <h2>Order Details</h2>
+        <div class="order-summary">
+          <div class="summary-header">
+            <h3>Order #{{ selectedOrder.id }}</h3>
+            <span class="status" [class]="selectedOrder.status">
+              {{ selectedOrder.status }}
+            </span>
+          </div>
+
+          <div class="items-list">
+            <h4>Items</h4>
+            <div class="item" *ngFor="let item of selectedOrder.items">
+              <div class="item-info">
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-quantity">x{{ item.pivot.quantity }}</span>
+              </div>
+              <span class="item-price">${{ item.price }}</span>
+            </div>
+            <div class="total">
+              <strong>Total:</strong>
+              <span>${{ selectedOrder.total_amount }}</span>
+            </div>
+          </div>
+
+          <!-- Tracking History -->
+          <div class="tracking-history">
+            <h4>Order Timeline</h4>
+            <div>
+              <div class="timeline-item" *ngFor="let track of orderTracking?.tracking_history">
+                <div class="timeline-content">
+                  <div class="status-change">
+                    {{ track.from_status || 'Order Created' }} → {{ track.to_status }}
+                  </div>
+                  <div class="change-info">
+                    <span>by {{ track.changed_by.name }}</span>
+                    <span class="date">{{ formatDate(track.changed_at) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

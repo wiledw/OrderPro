@@ -180,16 +180,16 @@ class AuthController extends Controller
     public function logout(Request $request): JsonResponse
     {
         try {
-            $user = $this->getAuthenticatedUser();
-            $this->revokeUserTokens($user);
+            // Delete only the current token that was used for the request
+            $request->user()->currentAccessToken()->delete();
 
-            Log::info('User logged out successfully', [
-                'user_id' => $user->id
+            Log::info('User logged out successfully from current device', [
+                'user_id' => $request->user()->id
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Logged out successfully'
+                'message' => 'Logged out successfully from current device'
             ]);
 
         } catch (\Exception $e) {

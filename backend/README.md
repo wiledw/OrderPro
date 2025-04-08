@@ -125,6 +125,21 @@ Set is_admin to 1 for a user in the DB:
 UPDATE users SET is_admin = 1 WHERE email = 'admin@example.com';
 ```
 
+### Logout
+```bash
+POST /api/logout
+
+Bearer {Token}
+```
+
+Response:
+```bash
+{
+    "success": true,
+    "message": "Logged out successfully from current device"
+}
+```
+
 ## Order Endpoints
 All endpoints below require Authorization header:
 

@@ -326,7 +326,7 @@ Response Body:
 }
 ```
 
-### 🔄 Order Status History
+## 🔄 Order Status History
 Each order contains a status_histories array with:
 
 1.     from_status
@@ -338,6 +338,42 @@ Each order contains a status_histories array with:
 4.     created_at
 
 This allows both users and admins to view the order's status timeline.
+
+### Tracking Order Status
+```bash
+PATCH /api/orders/[id]/tracking
+```
+
+Response Body:
+```bash
+{
+    "success": true,
+    "data": {
+        "order_id": 3,
+        "current_status": "processing",
+        "tracking_history": [
+            {
+                "from_status": null,
+                "to_status": "pending",
+                "changed_by": {
+                    "id": 2,
+                    "name": "John Doe"
+                },
+                "changed_at": "2025-04-08T06:43:22.000000Z"
+            },
+            {
+                "from_status": "pending",
+                "to_status": "processing",
+                "changed_by": {
+                    "id": 3,
+                    "name": "Admin User"
+                },
+                "changed_at": "2025-04-08T06:53:45.000000Z"
+            }
+        ]
+    }
+}
+```
 
 
 ## License

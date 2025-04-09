@@ -5,7 +5,14 @@
 This is the backend API for an order management system built with **Laravel** and **MySQL** database. It supports user authentication, order creation, admin management of orders, and order tracking history.
 
 
-## 📦 Features
+## Table of Contents
+- [Features](#features)
+- [File Structure Overview](#file-structure)
+- [Setup Instructions](#setup-instructions)
+- [API Endpoints](#api-endpoints)
+- [License](#license)
+
+## Features
 
 ### ✅ Authentication
 - **Register / Login** using email and password
@@ -30,7 +37,95 @@ This is the backend API for an order management system built with **Laravel** an
   - When it happened
 
 ---
-## 🛠️ Setup Instructions
+
+## File Structure
+### 📁 `app/`
+
+Contains the core application code, including models, controllers, and service providers.
+
+### 📁 `Http/`
+Handles HTTP-related logic.
+
+- **Controllers/**: Handles incoming requests and returns responses.
+  - `AuthController.php`: Manages user authentication, registration, and token generation.
+  - `ItemController.php`: Handles item-related operations, such as fetching and storing items.
+  - `OrderController.php`: Manages order creation, retrieval, and status updates.
+  - `Controller.php`: Base controller class extended by other controllers.
+
+### 📁 `Models/`
+Eloquent models representing the application's database tables.
+
+- `User.php`: Represents the `users` table and includes relationships to orders.
+- `Item.php`: Represents the `items` table and includes relationships to orders.
+- `Order.php`: Represents the `orders` table and includes relationships to users and items.
+- `OrderStatusHistory.php`: Tracks the history of order status changes.
+
+### 📁 `Providers/`
+Bootstraps and registers application services.
+
+- `AppServiceProvider.php`: Registers core application services.
+
+### 📁 `bootstrap/`
+
+Contains application bootstrapping files.
+
+- `app.php`: Initializes the application, including routing and middleware.
+
+
+### 📁 `config/`
+
+Holds configuration files for various services (e.g., database, mail, services, etc.).
+
+
+### 📁 `database/`
+
+Manages database-related resources.
+
+- **migrations/**: Contains schema definitions for creating/modifying tables.
+- **seeders/**: Seeds the database with initial data.
+
+
+### 📁 `public/`
+
+The entry point of the application and location for public assets.
+
+- `index.php`: Main entry script.
+- CSS, JavaScript, and image assets.
+
+
+### 📁 `resources/`
+
+Frontend and language resources.
+
+- **views/**: Blade templates used for rendering HTML.
+- **lang/**: Language files used for localization.
+
+
+### 📁 `routes/`
+
+Defines the application's route files.
+
+- `api.php`: Defines API-specific routes.
+- `web.php`: Defines web (browser-facing) routes.
+
+
+### 📁 `storage/`
+
+Stores generated files such as logs, cache, and uploaded files.
+
+- **logs/**: Stores log files for debugging and monitoring.
+- **app/**: Storage location for application-generated files.
+
+
+### 📁 `tests/`
+
+Contains automated tests for the application.
+
+- **Feature/**: Tests that validate application features and flows.
+- **Unit/**: Tests individual components and logic.
+
+
+## Setup Instructions
 ```bash
 git clone https://github.com/[username]/PillwayAssesment.git
 cd PillwayAssesment
@@ -60,7 +155,7 @@ php artisan migrate --seed
 
 ## API Endpoints
 
-🔐 Auth Endpoints
+### 🔐 Auth Endpoints
 
 ### Register
 ```bash
@@ -140,7 +235,7 @@ Response:
 }
 ```
 
-## Order Endpoints
+### 🛒 Order Endpoints
 All endpoints below require Authorization header:
 
 Authorization: Bearer {token}
@@ -335,6 +430,7 @@ Response:
 ```bash
 GET /api/orders
 ```
+
 ### Update Order Status (Admin only)
 ⚠️ Status can only move forward in this order: pending → processing → shipped → delivered
 ```bash
@@ -414,7 +510,7 @@ Response Body:
 }
 ```
 
-## 🔄 Order Status History
+### Order Status History
 Each order contains a status_histories array with:
 
 1.     from_status

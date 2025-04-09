@@ -6,6 +6,7 @@ import { NoAuthGuard } from './guards/no-auth.guard';
 import { OrdersComponent } from './user/orders/orders.component'; 
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
+import { ItemsComponent } from './user/items/items.component';
 
 export const routes: Routes = [
   { 
@@ -26,6 +27,10 @@ export const routes: Routes = [
   { path: 'orders', 
     component: OrdersComponent,
     canActivate: [AuthGuard]
+  },
+  { path: 'items', 
+    component: ItemsComponent, 
+    canActivate: [AuthGuard] 
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

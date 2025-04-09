@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrdersService } from '../../services/order.service';
 import { CartService } from '../../services/cart.service';
+import { ItemsService } from '../../services/items.service';
 import { Item } from '../../models/item.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -33,7 +34,7 @@ export class OrdersComponent implements OnInit {
   cardExpYear: string = '';
   cardCvv: string = '';
 
-  constructor(private ordersService: OrdersService, private router: Router, private cartService: CartService) {}
+  constructor(private ordersService: OrdersService, private router: Router, private cartService: CartService, private itemsService: ItemsService) {}
 
   ngOnInit() {
     this.loadItems();
@@ -42,7 +43,7 @@ export class OrdersComponent implements OnInit {
   }
 
   loadItems() {
-    this.ordersService.getItems(this.sortOrder, this.currentPage).subscribe({
+    this.itemsService.getItems(this.sortOrder, this.currentPage).subscribe({
       next: (res) => {
         if (res.success) {
           this.items = res.data.items;

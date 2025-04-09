@@ -1,0 +1,141 @@
+.items-container {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #5a6268;
+      }
+    }
+  }
+
+  .item-form {
+    margin-bottom: 2rem;
+
+    div {
+      margin-bottom: 1rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+    }
+
+    .btn-primary {
+      padding: 0.5rem 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+
+  .success {
+    color: #28a745;
+    margin-bottom: 1rem;
+  }
+
+  .error {
+    color: #dc3545;
+    margin-bottom: 1rem;
+  }
+
+  .sorting {
+    margin-bottom: 1rem;
+
+    label {
+      margin-right: 0.5rem;
+    }
+
+    select {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  }
+
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); // Set to 3 columns
+    gap: 1rem; // Space between items
+    list-style: none;
+    padding: 0;
+
+    .item-box {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 1rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      text-align: center; // Center text
+
+      h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.25rem;
+      }
+
+      p {
+        margin: 0;
+        color: #666;
+      }
+    }
+  }
+
+  .pagination-controls {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: #0056b3;
+      }
+    }
+  }
+}

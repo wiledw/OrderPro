@@ -206,6 +206,19 @@ Response body
 }
 ```
 
+### Add item (Admin only)
+```bash
+POST /api/items
+```
+Request Body:
+```bash
+{
+    "name": "ELEGO UNO",
+    "price": 29.99
+}
+```
+
+
 ### Create Order (User only)
 ```bash
 POST /api/orders

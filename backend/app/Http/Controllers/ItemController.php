@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
@@ -62,6 +63,52 @@ class ItemController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch items',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Store a new item
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse
+    {
+        // Check if the authenticated user is an admin
+        $user = Auth::user();
+        if (!$user || !$user->is_admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Forbidden: You do not have permission to add items.'
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric|min:0'
+            ]);
+
+            // Create a new item
+            $item = Item::create($validatedData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Item created successfully',
+                'data' => $item
+            ], Response::HTTP_CREATED);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to create item', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create item',
                 'error' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

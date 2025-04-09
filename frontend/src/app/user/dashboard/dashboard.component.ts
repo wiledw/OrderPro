@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { OrdersService, Order, OrderTracking } from '../../services/order.service';
+import { RouterLink, Router } from '@angular/router';
 
 interface User {
   id: number;
@@ -13,7 +14,7 @@ interface User {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [RouterLink, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -27,7 +28,7 @@ export class DashboardComponent implements OnInit {
   filteredOrders: Order[] = [];
   currentStatusFilter: string = '';
 
-  constructor(private auth: AuthService, private ordersService: OrdersService,) {}
+  constructor(private auth: AuthService, private ordersService: OrdersService, private router: Router) {}
 
   ngOnInit() {
     this.loadUserInfo();

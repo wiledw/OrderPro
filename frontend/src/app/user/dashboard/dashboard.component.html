@@ -7,6 +7,8 @@
         <div *ngIf="loading" class="loading">Loading user information...</div>
         <div *ngIf="error" class="error">{{ error }}</div>
       </div>
+
+      <a routerLink="/orders" class="navbar-item btn btn-primary">Create Order</a> 
     </div>
 
     <div class="filter">

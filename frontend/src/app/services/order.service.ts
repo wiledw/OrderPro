@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Item } from '../models/item.model'; 
 
 export interface OrderItem {
   id: number;
@@ -69,5 +70,23 @@ export class OrdersService {
       `${this.baseUrl}/orders/${orderId}/tracking`,
       this.getAuthHeaders()
     );
+  }
+
+  getItems(): Observable<{ success: boolean; data: { items: Item[]; pagination: any } }> {
+    const token = localStorage.getItem('auth_token'); // Retrieve the token from local storage
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}` // Set the Authorization header
+    });
+
+    return this.http.get<{ success: boolean; data: { items: Item[]; pagination: any } }>(`${this.baseUrl}/items`, { headers });
+  }
+
+  createOrder(orderData: any): Observable<any> {
+    const token = localStorage.getItem('auth_token'); // Retrieve the token from local storage
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}` // Set the Authorization header
+    });
+
+    return this.http.post(`${this.baseUrl}/orders`, orderData, { headers });
   }
 }

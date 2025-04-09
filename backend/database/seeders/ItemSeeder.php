@@ -19,6 +19,13 @@ class ItemSeeder extends Seeder
             ['id' => 3, 'name' => '4K Monitor', 'price' => 299.99],
             ['id' => 4, 'name' => 'USB-C Hub', 'price' => 29.99],
             ['id' => 5, 'name' => 'Wireless Headset', 'price' => 119.99],
+            ['id' => 6, 'name' => 'Ipad Pro', 'price' => 999.99],
+            ['id' => 7, 'name' => 'Wireless Mouse', 'price' => 219.99],
+            ['id' => 8, 'name' => 'Wireless Keyboard', 'price' => 189.99],
+            ['id' => 9, 'name' => 'Gaming Mic', 'price' => 69.99],
+            ['id' => 10, 'name' => 'Mac Book Pro', 'price' => 1899.99],
+            ['id' => 11, 'name' => 'Airpods', 'price' => 259.99],
+            ['id' => 12, 'name' => 'Samsung Phone', 'price' => 899.99],
         ];
 
         foreach ($items as $item) {

@@ -5,7 +5,6 @@ The **Order Management System** frontend is built using **Angular** and provides
 
 ## Table of Contents
 - [Installation Instructions](#installation-instructions)
-- [Usage](#usage)
 - [File Structure Overview](#file-structure-overview)
 - [Environment Variables](#environment-variables)
 - [Angular Material](#angular-material)
@@ -149,7 +148,7 @@ Follow the prompts to set up Angular Material in your project.
 
 - Implement user profile management features.
 - Add payment integration for online transactions (Currently Mock).
-- Research and improve accessibility features for better user experience.
+- Research, gather survey data and improve accessibility features for better user experience.
 
 ## License
 

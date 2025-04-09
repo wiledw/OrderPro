@@ -12,31 +12,20 @@
     </select>
   </div>
 
-  <!-- Order Form -->
-  <div class="order-section">
-    <form #orderForm="ngForm" class="order-form">
-      <div class="form-group">
-        <label for="items">Select Items:</label>
-        <div class="select-wrapper">
-          <select id="items" [(ngModel)]="selectedItemId" name="selectedItemId" class="form-control">
-            <option [ngValue]="null" disabled selected>Select item</option>
-            <option *ngFor="let item of items" [ngValue]="item.id">
-              {{ item.name }} - ${{ item.price }}
-            </option>
-          </select>
-          <div class="select-arrow"></div>
-        </div>
-      </div>
+  <!-- Items Display -->
+  <div class="items-grid">
+    <div *ngFor="let item of items" class="item-box">
+      <h3>{{ item.name }}</h3>
+      <p>Price: ${{ item.price }}</p>
+      <button (click)="addToCart(item.id, quantity)" class="btn btn-add">Add to Cart</button>
+    </div>
+  </div>
 
-      <div class="form-group">
-        <label for="quantity">Quantity:</label>
-        <input type="number" [(ngModel)]="quantity" name="quantity" min="1" required class="form-control" />
-      </div>
-
-      <button type="button" (click)="addToCart(selectedItemId, quantity)" class="btn btn-add">
-        <span class="btn-icon">+</span> Add to Cart
-      </button>
-    </form>
+  <!-- Pagination Controls -->
+  <div class="pagination-controls">
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }}</span>
+    <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
   </div>
 
   <!-- Cart View -->
@@ -44,13 +33,14 @@
     <h3 class="section-subtitle"><span class="icon">🛒</span> Your Cart</h3>
     <div class="cart-items">
       <div *ngFor="let item of selectedItems" class="cart-item">
-        <ng-container *ngIf="getItemDetails(item.id) as details">
-          <div class="item-details">
-            <span class="item-name">{{ details.name }}</span>
-            <span class="item-quantity">x {{ item.quantity }}</span>
-          </div>
-          <span class="item-price">${{ (getParsedPrice(details.price) * item.quantity).toFixed(2) }}</span>
-        </ng-container>
+        <div class="item-details">
+          <span class="item-name">{{ item.itemData.name }}</span>
+          <span class="item-quantity">x {{ item.quantity }}</span>
+          <button (click)="removeFromCart(item.id)" class="btn btn-danger">Remove</button>
+        </div>
+        <span class="item-price">
+          ${{ (item.itemData?.price * item.quantity).toFixed(2) }}
+        </span>
       </div>
       <div class="cart-total">
         <span>Total:</span>
@@ -62,112 +52,11 @@
     </button>
   </div>
 
-  <!-- Payment Step -->
-  <div *ngIf="showPayment" class="payment-section">
-    <h3 class="section-subtitle"><span class="icon">💳</span> Payment Details</h3>
-    
-    <form #paymentForm="ngForm" class="payment-form">
-      <div class="form-group">
-        <label for="cardHolder">Cardholder Name</label>
-        <input 
-          type="text" 
-          id="cardHolder" 
-          [(ngModel)]="cardHolder" 
-          name="cardHolder" 
-          class="form-control" 
-          placeholder="Name on card"
-          required
-        />
-      </div>
-      
-      <div class="form-group">
-        <label for="cardNumber">Card Number</label>
-        <div class="card-input-wrapper">
-          <input 
-            type="text" 
-            id="cardNumber" 
-            [(ngModel)]="cardNumber" 
-            name="cardNumber" 
-            class="form-control" 
-            placeholder="1234 5678 9012 3456"
-            maxlength="19"
-            required
-          />
-          <div class="card-icons">
-            <span class="card-icon visa"></span>
-            <span class="card-icon mastercard"></span>
-            <span class="card-icon amex"></span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="expiry">Expiration Date</label>
-          <div class="expiry-inputs">
-            <input 
-              type="text" 
-              id="expMonth" 
-              [(ngModel)]="cardExpMonth" 
-              name="expMonth" 
-              class="form-control" 
-              placeholder="MM"
-              maxlength="2"
-              required
-            />
-            <span class="expiry-separator">/</span>
-            <input 
-              type="text" 
-              id="expYear" 
-              [(ngModel)]="cardExpYear" 
-              name="expYear" 
-              class="form-control" 
-              placeholder="YY"
-              maxlength="2"
-              required
-            />
-          </div>
-        </div>
-        
-        <div class="form-group half">
-          <label for="cvv">CVV</label>
-          <input 
-            type="text" 
-            id="cvv" 
-            [(ngModel)]="cardCvv" 
-            name="cvv" 
-            class="form-control" 
-            placeholder="123"
-            maxlength="4"
-            required
-          />
-        </div>
-      </div>
-      
-      <div class="order-summary">
-        <h4>Order Summary</h4>
-        <div class="summary-row">
-          <span>Subtotal</span>
-          <span>${{ totalAmount.toFixed(2) }}</span>
-        </div>
-        <div class="summary-row">
-          <span>Tax</span>
-          <span>${{ (totalAmount * 0.08).toFixed(2) }}</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total</span>
-          <span>${{ (totalAmount * 1.08).toFixed(2) }}</span>
-        </div>
-      </div>
-      
-      <div class="action-buttons">
-        <button (click)="confirmOrder()" class="btn btn-success" [disabled]="!paymentForm.valid">
-          Complete Payment
-        </button>
-        <button (click)="cancelOrder()" class="btn btn-outline">
-          Cancel
-        </button>
-      </div>
-    </form>
-  </div>
+  <app-payment-modal 
+    *ngIf="showPaymentModal" 
+    [selectedItems]="selectedItems" 
+    [totalAmount]="totalAmount" 
+    (close)="showPaymentModal = false" 
+    (confirmOrder)="onConfirmOrder()">
+  </app-payment-modal>
 </div>

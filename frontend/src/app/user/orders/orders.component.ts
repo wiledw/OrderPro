@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { OrdersService } from '../../services/order.service';
+import { CartService } from '../../services/cart.service';
 import { Item } from '../../models/item.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { PaymentModalComponent } from '../payment-modal/payment-modal.component';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, PaymentModalComponent],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss']
 })
@@ -20,79 +22,80 @@ export class OrdersComponent implements OnInit {
   showPayment = false;
   totalAmount: number = 0;
   sortOrder: 'asc' | 'desc' = 'asc'; 
+  currentPage: number = 1;
+  totalPages: number = 1;
 
   // Payment inputs
+  showPaymentModal: boolean = false; 
   cardHolder: string = '';
   cardNumber: string = '';
   cardExpMonth: string = '';
   cardExpYear: string = '';
   cardCvv: string = '';
 
-  constructor(private ordersService: OrdersService, private router: Router) {}
+  constructor(private ordersService: OrdersService, private router: Router, private cartService: CartService) {}
 
   ngOnInit() {
     this.loadItems();
+    this.selectedItems = this.cartService.getCartItems(); // Load cart items from the service
+    this.updateTotal(); // Update total based on loaded cart items
   }
 
   loadItems() {
-    this.ordersService.getItems(this.sortOrder).subscribe({
-        next: (res) => {
-            if (res.success) this.items = res.data.items;
-        },
-        error: (err) => {
-            console.error('Error loading items:', err);
+    this.ordersService.getItems(this.sortOrder, this.currentPage).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.items = res.data.items;
+          this.totalPages = res.data.pagination.total_pages; // Assuming your API returns total pages
         }
+      },
+      error: (err) => {
+        console.error('Error loading items:', err);
+      }
     });
-  } 
+  }
 
   changeSortOrder(event: Event) {
-      const target = event.target as HTMLSelectElement; 
-      this.sortOrder = target.value as 'asc' | 'desc';
-      this.loadItems(); // Reload items with the new sorting order
+    const target = event.target as HTMLSelectElement; 
+    this.sortOrder = target.value as 'asc' | 'desc';
+    this.loadItems(); // Reload items with the new sorting order
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.loadItems();
   }
 
   addToCart(itemId: number | null, quantity: number) {
     if (!itemId || quantity < 1) return;
-
-    const existing = this.selectedItems.find(i => i.id === itemId);
-    if (existing) {
-      existing.quantity += quantity;
-    } else {
-      this.selectedItems.push({ id: itemId, quantity });
-    }
-
+  
+    const itemData = this.items.find(item => item.id === itemId);
+    if (!itemData) return;
+    this.cartService.addToCart(itemId, quantity, itemData);  
+    this.selectedItems = this.cartService.getCartItems();
     this.updateTotal();
     this.selectedItemId = null;
     this.quantity = 1;
   }
 
-  updateTotal() {
-    this.totalAmount = this.selectedItems.reduce((sum, item) => {
-      const found = this.items.find(i => i.id === item.id);
-      return sum + (found ? parseFloat(found.price) * item.quantity : 0);
-    }, 0);
+  removeFromCart(itemId: number) {
+    this.cartService.removeFromCart(itemId); // Use CartService to remove from cart
+    this.selectedItems = this.cartService.getCartItems(); // Update local cart items
+    this.updateTotal(); // Update total after removing item
   }
 
-  getItemDetails(id: number) {
-    return this.items.find(i => i.id === id);
+  updateTotal() {
+    this.totalAmount = this.cartService.getTotalAmount();
   }
 
   proceedToPayment() {
-    this.showPayment = true;
+    this.showPaymentModal = true;
   }
 
-  confirmOrder() {
+  onConfirmOrder() {
     const orderPayload = {
       items: this.selectedItems
     };
-
-    // Simulate payment step (this can be replaced with real payment API later)
-    const isCardValid = this.cardHolder && this.cardNumber && this.cardExpMonth && this.cardExpYear && this.cardCvv;
-
-    if (!isCardValid) {
-      alert('Please complete all payment fields.');
-      return;
-    }
 
     this.ordersService.createOrder(orderPayload).subscribe({
       next: (res) => {
@@ -113,6 +116,7 @@ export class OrdersComponent implements OnInit {
   }
 
   resetOrderForm() {
+    this.cartService.clearCart(); // Clear the cart in the service
     this.selectedItems = [];
     this.selectedItemId = null;
     this.quantity = 1;

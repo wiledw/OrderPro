@@ -1,0 +1,102 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3 class="section-subtitle"><span class="icon">💳</span> Payment Details</h3>
+    
+    <form class="payment-form">
+      <div class="form-group">
+        <label for="cardHolder">Cardholder Name</label>
+        <input 
+          type="text" 
+          id="cardHolder" 
+          [(ngModel)]="cardHolder" 
+          name="cardHolder" 
+          class="form-control" 
+          placeholder="Name on card"
+          required
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="cardNumber">Card Number</label>
+        <input 
+          type="text" 
+          id="cardNumber" 
+          [(ngModel)]="cardNumber" 
+          name="cardNumber" 
+          class="form-control" 
+          placeholder="1234 5678 9012 3456"
+          maxlength="19"
+          required
+        />
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="expMonth">Expiration Date</label>
+          <div class="expiry-inputs">
+            <input 
+              type="text" 
+              id="expMonth" 
+              [(ngModel)]="cardExpMonth" 
+              name="expMonth" 
+              class="form-control" 
+              placeholder="MM"
+              maxlength="2"
+              required
+            />
+            <span class="expiry-separator">/</span>
+            <input 
+              type="text" 
+              id="expYear" 
+              [(ngModel)]="cardExpYear" 
+              name="expYear" 
+              class="form-control" 
+              placeholder="YY"
+              maxlength="2"
+              required
+            />
+          </div>
+        </div>
+        
+        <div class="form-group half">
+          <label for="cvv">CVV</label>
+          <input 
+            type="text" 
+            id="cvv" 
+            [(ngModel)]="cardCvv" 
+            name="cvv" 
+            class="form-control" 
+            placeholder="123"
+            maxlength="4"
+            required
+          />
+        </div>
+      </div>
+      
+      <div class="order-summary">
+        <h4>Order Summary</h4>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>${{ totalAmount.toFixed(2) }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Tax</span>
+          <span>${{ (totalAmount * 0.08).toFixed(2) }}</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span>${{ (totalAmount * 1.08).toFixed(2) }}</span>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button type="button" (click)="onConfirm()" class="btn btn-success">
+          Complete Payment
+        </button>
+        <button type="button" (click)="closeModal()" class="btn btn-outline">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

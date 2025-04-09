@@ -259,78 +259,6 @@ $transition: all 0.3s ease;
   font-weight: 600;
 }
 
-// Payment Form (continued)
-.payment-form {
-  .card-input-wrapper {
-    position: relative;
-
-    .card-icons {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      @include flex(row, flex-end, center);
-      gap: 0.5rem;
-
-      .card-icon {
-        width: 30px;
-        height: 20px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        opacity: 0.5;
-        transition: opacity 0.3s;
-
-       
-      }
-    }
-  }
-
-  .expiry-inputs {
-    @include flex(row, flex-start, center);
-    gap: 0.5rem;
-
-    input {
-      flex: 1;
-      text-align: center;
-    }
-
-    .expiry-separator {
-      font-size: 1.25rem;
-      font-weight: bold;
-    }
-  }
-}
-
-// Order Summary
-.order-summary {
-  background-color: #f3f4f6;
-  border-radius: $border-radius;
-  padding: 1rem;
-  margin-top: 2rem;
-  box-shadow: $shadow-sm;
-
-  h4 {
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-  }
-
-  .summary-row {
-    @include flex(row, space-between, center);
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-
-    &.total {
-      font-weight: 700;
-      font-size: 1rem;
-      border-top: 1px solid $border-color;
-      padding-top: 0.5rem;
-      margin-top: 1rem;
-    }
-  }
-}
-
 // Action Buttons (Confirm/Cancel)
 .action-buttons {
   @include flex(row, space-between, center);
@@ -358,5 +286,144 @@ $transition: all 0.3s ease;
       border-radius: 4px;         
       font-size: 16px;  
       cursor: pointer;     
+  }
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.item-box {
+    background-color: $card-background;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    padding: 1rem;
+    box-shadow: $shadow-md;
+    text-align: center;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+
+    button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: $border-radius;
+        background-color: $primary-color;
+        color: white;
+        cursor: pointer;
+
+        &:disabled {
+            background-color: $text-light;
+            cursor: not-allowed;
+        }
+    }
+}
+
+// Modal Styles
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; // Ensure it appears above other content
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: $border-radius;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 400px; // Adjust width as needed
+}
+
+// Form Styles
+.form-group {
+  margin-bottom: 1.25rem;
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: $text-color;
+  }
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: $text-color;
+  background-color: $input-background;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  transition: $transition;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
+  }
+
+  &::placeholder {
+    color: $text-light;
+  }
+}
+
+.expiry-inputs {
+  @include flex(row, flex-start, center);
+  gap: 0.5rem;
+
+  input {
+    flex: 1;
+    text-align: center;
+  }
+
+  .expiry-separator {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+}
+
+// Action Buttons
+.action-buttons {
+  @include flex(row, space-between, center);
+  margin-top: 1.5rem;
+  gap: 1rem;
+
+  .btn {
+    flex: 1;
+  }
+}
+
+// Order Summary Styles
+.order-summary {
+  margin-top: 1rem;
+
+  h4 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .total {
+    font-weight: bold;
   }
 }

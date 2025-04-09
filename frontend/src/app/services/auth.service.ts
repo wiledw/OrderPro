@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { catchError, map, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { CartService } from './cart.service';
+import { environment } from '../../environments/environment';
 
 interface User {
   id: number;
@@ -16,7 +17,7 @@ interface User {
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8000/api';
+  private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient, private router: Router, private cartService: CartService) {}
 

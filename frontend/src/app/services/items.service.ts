@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
 import { Item } from '../models/item.model'; 
 import { throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemsService {
-  private baseUrl = 'http://localhost:8000/api';
+  private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {}
 

@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
 import { Item } from '../models/item.model'; 
 import { throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface OrderItem {
   id: number;
@@ -45,7 +46,7 @@ export interface OrderTracking {
   providedIn: 'root'
 })
 export class OrdersService {
-  private baseUrl = 'http://localhost:8000/api';
+  private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {}
 

@@ -19,6 +19,7 @@ export class OrdersComponent implements OnInit {
   selectedItems: { id: number; quantity: number }[] = [];
   showPayment = false;
   totalAmount: number = 0;
+  sortOrder: 'asc' | 'desc' = 'asc'; 
 
   // Payment inputs
   cardHolder: string = '';
@@ -34,14 +35,20 @@ export class OrdersComponent implements OnInit {
   }
 
   loadItems() {
-    this.ordersService.getItems().subscribe({
-      next: (res) => {
-        if (res.success) this.items = res.data.items;
-      },
-      error: (err) => {
-        console.error('Error loading items:', err);
-      }
+    this.ordersService.getItems(this.sortOrder).subscribe({
+        next: (res) => {
+            if (res.success) this.items = res.data.items;
+        },
+        error: (err) => {
+            console.error('Error loading items:', err);
+        }
     });
+  } 
+
+  changeSortOrder(event: Event) {
+      const target = event.target as HTMLSelectElement; 
+      this.sortOrder = target.value as 'asc' | 'desc';
+      this.loadItems(); // Reload items with the new sorting order
   }
 
   addToCart(itemId: number | null, quantity: number) {

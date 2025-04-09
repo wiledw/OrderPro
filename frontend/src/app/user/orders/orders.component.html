@@ -4,6 +4,14 @@
     <button (click)="goToDashboard()" class="btn btn-secondary">Back to Dashboard</button>
   </div>
 
+  <div class="sorting-options">
+    <label for="sort">Sort by Price:</label>
+    <select id="sort" (change)="changeSortOrder($event)">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+  </div>
+
   <!-- Order Form -->
   <div class="order-section">
     <form #orderForm="ngForm" class="order-form">

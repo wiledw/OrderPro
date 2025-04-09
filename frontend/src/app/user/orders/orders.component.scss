@@ -341,3 +341,22 @@ $transition: all 0.3s ease;
     flex: 1;
   }
 }
+
+.sorting-options {
+  display: flex;                     
+  align-items: center;
+  margin-bottom: 20px;
+
+  label {
+      margin-right: 10px;
+      font-weight: bold;
+  }
+
+  select {
+      padding: 5px;                
+      border: 1px solid #ccc;     
+      border-radius: 4px;         
+      font-size: 16px;  
+      cursor: pointer;     
+  }
+}

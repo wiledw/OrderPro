@@ -72,14 +72,14 @@ export class OrdersService {
     );
   }
 
-  getItems(): Observable<{ success: boolean; data: { items: Item[]; pagination: any } }> {
+  getItems(sort: 'asc' | 'desc' = 'asc'): Observable<{ success: boolean; data: { items: Item[]; pagination: any } }> {
     const token = localStorage.getItem('auth_token'); // Retrieve the token from local storage
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}` // Set the Authorization header
+        'Authorization': `Bearer ${token}` // Set the Authorization header
     });
 
-    return this.http.get<{ success: boolean; data: { items: Item[]; pagination: any } }>(`${this.baseUrl}/items`, { headers });
-  }
+    return this.http.get<{ success: boolean; data: { items: Item[]; pagination: any } }>(`${this.baseUrl}/items?sort=${sort}`, { headers });
+}
 
   createOrder(orderData: any): Observable<any> {
     const token = localStorage.getItem('auth_token'); // Retrieve the token from local storage

@@ -286,3 +286,27 @@
       padding: 0.5rem; // Padding for options
     }
   }}
+
+
+  .order-status-management {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    margin-bottom: 35px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+     
+    }
+
+    .status-buttons {
+      display: flex; 
+      gap: 1rem; 
+     
+    }
+  }

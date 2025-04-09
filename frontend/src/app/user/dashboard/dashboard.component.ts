@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit {
   orderTracking: OrderTracking | null = null;
   filteredOrders: Order[] = [];
   currentStatusFilter: string = '';
+  isAdmin: boolean = false;
 
   constructor(private auth: AuthService, private ordersService: OrdersService, private router: Router) {}
 
@@ -39,6 +40,7 @@ export class DashboardComponent implements OnInit {
     this.auth.getCurrentUser().subscribe({
       next: (user) => {
         this.user = user;
+        this.isAdmin = user.is_admin;
         this.loading = false;
       },
       error: (error) => {
@@ -61,6 +63,21 @@ export class DashboardComponent implements OnInit {
         this.error = 'Failed to load orders';
         this.loading = false;
         console.error('Error loading orders:', error);
+      }
+    });
+  }
+
+  changeOrderStatus(orderId: number, newStatus: string) {
+    this.ordersService.updateOrderStatus(orderId, newStatus).subscribe({
+      next: (res) => {
+        if (res.success) {
+          alert(`Order status updated to '${newStatus}'`);
+          this.loadOrders(); // Reload orders to reflect the updated status
+        }
+      },
+      error: (err) => {
+        console.error('Failed to update order status:', err);
+        alert('❌ Failed to update order status.');
       }
     });
   }

@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { CartService } from './cart.service';
 
 interface User {
   id: number;
@@ -17,7 +18,7 @@ interface User {
 export class AuthService {
   private baseUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private cartService: CartService) {}
 
   private cleanToken(token: string): string {
     return token.replace(/^\d+\|/, '');
@@ -74,6 +75,7 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/logout`, {}, this.getAuthHeaders()).pipe(
       tap(() => {
         localStorage.removeItem('auth_token');
+        this.cartService.clearCart();
         this.router.navigate(['/login']);
       })
     );

@@ -47,6 +47,16 @@
       <!-- Order Details -->
       <div class="order-details" *ngIf="selectedOrder">
         <h2>Order Details</h2>
+
+        <div *ngIf="isAdmin" class="order-status-management">
+          <h3>Manage Order Status</h3>
+          <div class="status-buttons">
+            <button (click)="changeOrderStatus(selectedOrder.id, 'processing')" class="btn btn-primary">Set to Processing</button>
+            <button (click)="changeOrderStatus(selectedOrder.id, 'shipped')" class="btn btn-primary">Set to Shipped</button>
+            <button (click)="changeOrderStatus(selectedOrder.id, 'delivered')" class="btn btn-primary">Set to Delivered</button>
+          </div>
+        </div>
+
         <div class="order-summary">
           <div class="summary-header">
             <h3>Order #{{ selectedOrder.id }}</h3>

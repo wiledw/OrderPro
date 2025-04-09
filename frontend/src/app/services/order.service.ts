@@ -89,4 +89,8 @@ export class OrdersService {
 
     return this.http.post(`${this.baseUrl}/orders`, orderData, { headers });
   }
+
+  updateOrderStatus(orderId: number, status: string): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/orders/${orderId}/status`, { status }, this.getAuthHeaders());
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { CartService } from './cart.service';
 
@@ -24,18 +24,15 @@ export class AuthService {
     return token.replace(/^\d+\|/, '');
   }
 
-  private getAuthHeaders() {
+  private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
-    return {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${token}`
-      })
-    };
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
   }
 
   private handleAuthError(error: HttpErrorResponse) {
     if (error.status === 401) {
-      // Token is invalid or expired
       localStorage.removeItem('auth_token');
       this.router.navigate(['/login']);
     }
@@ -49,7 +46,8 @@ export class AuthService {
           response.data.token = this.cleanToken(response.data.token);
         }
         return response;
-      })
+      }),
+      catchError(this.handleAuthError)
     );
   }
 
@@ -60,24 +58,27 @@ export class AuthService {
           response.data.token = this.cleanToken(response.data.token);
         }
         return response;
-      })
+      }),
+      catchError(this.handleAuthError)
     );
   }
 
   getCurrentUser() {
-    return this.http.get<{success: boolean, data: User}>(`${this.baseUrl}/me`, this.getAuthHeaders())
+    return this.http.get<{ success: boolean; data: User }>(`${this.baseUrl}/me`, { headers: this.getAuthHeaders() })
       .pipe(
-        map(response => response.data)
+        map(response => response.data),
+        catchError(this.handleAuthError)
       );
   }
 
   logoutApi() {
-    return this.http.post(`${this.baseUrl}/logout`, {}, this.getAuthHeaders()).pipe(
+    return this.http.post(`${this.baseUrl}/logout`, {}, { headers: this.getAuthHeaders() }).pipe(
       tap(() => {
         localStorage.removeItem('auth_token');
         this.cartService.clearCart();
         this.router.navigate(['/login']);
-      })
+      }),
+      catchError(this.handleAuthError)
     );
   }
 

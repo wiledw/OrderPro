@@ -18,7 +18,7 @@ interface Item {
 })
 export class ItemsComponent implements OnInit {
   items: Item[] = [];
-  newItem: Item = { name: '', price: 0, description: '' };
+  newItem: Item = { name: '', price: 0 };
   quantity: number = 1;
   sortOrder: 'asc' | 'desc' = 'asc'; 
   currentPage: number = 1;
@@ -32,7 +32,7 @@ export class ItemsComponent implements OnInit {
     this.loadItems();
   }
 
-  loadItems() {
+  loadItems(): void {
     this.itemsService.getItems(this.sortOrder, this.currentPage).subscribe({
       next: (res) => {
         if (res.success) {
@@ -50,19 +50,19 @@ export class ItemsComponent implements OnInit {
     });
   }
 
-  changeSortOrder(event: Event) {
+  changeSortOrder(event: Event): void {
     const target = event.target as HTMLSelectElement; 
     this.sortOrder = target.value as 'asc' | 'desc';
     this.loadItems();
   }
 
-  addItem() {
+  addItem(): void {
     this.itemsService.addItem(this.newItem).subscribe({
       next: (response) => {
         this.successMessage = 'Item added successfully!';
-        this.loadItems(); // Reload items after adding
-        this.newItem = { name: '', price: 0 }; // Reset form
-        this.error = ''; // Clear any previous error messages
+        this.loadItems();
+        this.newItem = { name: '', price: 0 };
+        this.error = '';
       },
       error: (error) => {
         this.error = 'Failed to add item';
@@ -71,12 +71,12 @@ export class ItemsComponent implements OnInit {
     });
   }
 
-  goToPage(page: number) {
+  goToPage(page: number): void {
     this.currentPage = page;
     this.loadItems();
   }
 
-  goToDashboard() {
+  goToDashboard(): void {
     this.router.navigate(['/dashboard']);
   }
 }

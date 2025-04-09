@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { Item } from '../models/item.model'; 
+import { throwError } from 'rxjs';
 
 export interface OrderItem {
   id: number;
@@ -48,49 +49,57 @@ export class OrdersService {
 
   constructor(private http: HttpClient) {}
 
-  private getAuthHeaders() {
+  private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
-    return {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${token}`
-      })
-    };
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
   }
 
   getUserOrders(status: string = ''): Observable<{ success: boolean; data: Order[] }> {
     const params = new HttpParams().set('status', status);
     return this.http.get<{ success: boolean; data: Order[] }>(
       `${this.baseUrl}/orders`,
-      { ...this.getAuthHeaders(), params }
+      { headers: this.getAuthHeaders(), params }
+    ).pipe(
+      catchError((error) => {
+        console.error('Error fetching orders:', error);
+        return throwError(() => error);
+      })
     );
   }
 
   getOrderTracking(orderId: number): Observable<{ success: boolean; data: OrderTracking }> {
     return this.http.get<{ success: boolean; data: OrderTracking }>(
       `${this.baseUrl}/orders/${orderId}/tracking`,
-      this.getAuthHeaders()
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      catchError((error) => {
+        console.error('Error fetching order tracking:', error);
+        return throwError(() => error);
+      })
     );
   }
 
   getItems(sort: 'asc' | 'desc' = 'asc', page: number = 1): Observable<{ success: boolean; data: { items: Item[]; pagination: any } }> {
-    const token = localStorage.getItem('auth_token'); // Retrieve the token from local storage
-    const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}` // Set the Authorization header
-    });
-
-    return this.http.get<{ success: boolean; data: { items: Item[]; pagination: any } }>(`${this.baseUrl}/items?sort=${sort}&page=${page}`, { headers });
+    return this.http.get<{ success: boolean; data: { items: Item[]; pagination: any } }>(`${this.baseUrl}/items?sort=${sort}&page=${page}`, { headers: this.getAuthHeaders() });
   }
 
   createOrder(orderData: any): Observable<any> {
-    const token = localStorage.getItem('auth_token'); // Retrieve the token from local storage
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}` // Set the Authorization header
-    });
-
-    return this.http.post(`${this.baseUrl}/orders`, orderData, { headers });
+    return this.http.post(`${this.baseUrl}/orders`, orderData, { headers: this.getAuthHeaders() }).pipe(
+      catchError((error) => {
+        console.error('Error creating order:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   updateOrderStatus(orderId: number, status: string): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/orders/${orderId}/status`, { status }, this.getAuthHeaders());
+    return this.http.patch(`${this.baseUrl}/orders/${orderId}/status`, { status }, { headers: this.getAuthHeaders() }).pipe(
+      catchError((error) => {
+        console.error('Error updating order status:', error);
+        return throwError(() => error);
+      })
+    );
   }
 }

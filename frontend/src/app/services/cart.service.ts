@@ -7,25 +7,25 @@ import { Item } from '../models/item.model';
 export class CartService {
   private items: { id: number; quantity: number; itemData: Item }[] = [];
 
-  addToCart(itemId: number, quantity: number, itemData: Item) {
-    const existing = this.items.find(item => item.id === itemId);
-    if (existing) {
-      existing.quantity += quantity;
+  addToCart(itemId: number, quantity: number, itemData: Item): void {
+    const existingItem = this.items.find(item => item.id === itemId);
+    if (existingItem) {
+      existingItem.quantity += quantity;
     } else {
       this.items.push({ id: itemId, quantity, itemData });
     }
   }
 
-  removeFromCart(itemId: number) {
-    this.items = this.items.filter(cart => cart.id !== itemId); // Remove item from cart
+  removeFromCart(itemId: number): void {
+    this.items = this.items.filter(cartItem => cartItem.id !== itemId);
   }
 
-  getCartItems() {
+  getCartItems(): { id: number; quantity: number; itemData: Item }[] {
     return this.items;
   }
 
-  clearCart() {
-    this.items = []; // Clear the cart
+  clearCart(): void {
+    this.items = [];
   }
 
   getTotalAmount(): number {

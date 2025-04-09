@@ -39,7 +39,7 @@
           <button (click)="removeFromCart(item.id)" class="btn btn-danger">Remove</button>
         </div>
         <span class="item-price">
-          ${{ (item.itemData?.price * item.quantity).toFixed(2) }}
+          ${{ (getParsedPrice(item.itemData.price) * item.quantity).toFixed(2) }}
         </span>
       </div>
       <div class="cart-total">

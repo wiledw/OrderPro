@@ -21,17 +21,17 @@ export class PaymentModalComponent {
   cardExpYear: string = '';
   cardCvv: string = '';
 
-  onConfirm() {
+  onConfirm(): void  {
     const isCardValid = this.cardHolder && this.cardNumber && this.cardExpMonth && this.cardExpYear && this.cardCvv;
     if (!isCardValid) {
       alert('Please complete all payment fields.');
       return;
     }
-    this.confirmOrder.emit(); // Emit event to confirm order
-    this.closeModal(); // Close the modal
+    this.confirmOrder.emit();
+    this.closeModal();
   }
 
-  closeModal() {
-    this.close.emit(); // Emit event to close modal
+  closeModal(): void  {
+    this.close.emit();
   }
 }

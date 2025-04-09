@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
     this.loadOrders();
   }
 
-  loadUserInfo() {
+  loadUserInfo(): void  {
     this.auth.getCurrentUser().subscribe({
       next: (user) => {
         this.user = user;
@@ -51,7 +51,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  loadOrders() {
+  loadOrders(): void  {
     this.loading = true;
     this.ordersService.getUserOrders(this.currentStatusFilter).subscribe({
       next: (response) => {
@@ -67,12 +67,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  changeOrderStatus(orderId: number, newStatus: string) {
+  changeOrderStatus(orderId: number, newStatus: string): void  {
     this.ordersService.updateOrderStatus(orderId, newStatus).subscribe({
       next: (res) => {
         if (res.success) {
           alert(`Order status updated to '${newStatus}'`);
-          this.loadOrders(); // Reload orders to reflect the updated status
+          this.loadOrders();
         }
       },
       error: (err) => {
@@ -82,25 +82,25 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  handleInput(event: Event) {
+  handleInput(event: Event): void  {
     const target = event.target as HTMLSelectElement; 
     this.currentStatusFilter = target.value; 
     this.filterOrders(this.currentStatusFilter); 
   }
 
-  filterOrders(status: string | null) {
+  filterOrders(status: string | null): void  {
     this.currentStatusFilter = status || '';
     this.filteredOrders = this.currentStatusFilter
       ? this.orders.filter(order => order.status === this.currentStatusFilter)
       : this.orders;
   }
   
-  selectOrder(order: Order) {
+  selectOrder(order: Order): void  {
     this.selectedOrder = order;
     this.loadOrderTracking(order.id);
   }
 
-  loadOrderTracking(orderId: number) {
+  loadOrderTracking(orderId: number): void  {
     this.ordersService.getOrderTracking(orderId).subscribe({
       next: (response) => {
         this.orderTracking = response.data;

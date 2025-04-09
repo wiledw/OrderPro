@@ -19,35 +19,29 @@ export class OrdersComponent implements OnInit {
   items: Item[] = [];
   selectedItemId: number | null = null;
   quantity: number = 1;
-  selectedItems: { id: number; quantity: number }[] = [];
+  selectedItems: { id: number; quantity: number; itemData: Item }[] = [];
   showPayment = false;
   totalAmount: number = 0;
   sortOrder: 'asc' | 'desc' = 'asc'; 
   currentPage: number = 1;
   totalPages: number = 1;
-
-  // Payment inputs
   showPaymentModal: boolean = false; 
-  cardHolder: string = '';
-  cardNumber: string = '';
-  cardExpMonth: string = '';
-  cardExpYear: string = '';
-  cardCvv: string = '';
+  
 
   constructor(private ordersService: OrdersService, private router: Router, private cartService: CartService, private itemsService: ItemsService) {}
 
   ngOnInit() {
     this.loadItems();
-    this.selectedItems = this.cartService.getCartItems(); // Load cart items from the service
-    this.updateTotal(); // Update total based on loaded cart items
+    this.selectedItems = this.cartService.getCartItems();
+    this.updateTotal();
   }
 
-  loadItems() {
+  loadItems(): void  {
     this.itemsService.getItems(this.sortOrder, this.currentPage).subscribe({
       next: (res) => {
         if (res.success) {
           this.items = res.data.items;
-          this.totalPages = res.data.pagination.total_pages; // Assuming your API returns total pages
+          this.totalPages = res.data.pagination.total_pages;
         }
       },
       error: (err) => {
@@ -56,18 +50,18 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  changeSortOrder(event: Event) {
+  changeSortOrder(event: Event): void  {
     const target = event.target as HTMLSelectElement; 
     this.sortOrder = target.value as 'asc' | 'desc';
-    this.loadItems(); // Reload items with the new sorting order
+    this.loadItems();
   }
 
-  goToPage(page: number) {
+  goToPage(page: number): void  {
     this.currentPage = page;
     this.loadItems();
   }
 
-  addToCart(itemId: number | null, quantity: number) {
+  addToCart(itemId: number | null, quantity: number): void  {
     if (!itemId || quantity < 1) return;
   
     const itemData = this.items.find(item => item.id === itemId);
@@ -79,21 +73,21 @@ export class OrdersComponent implements OnInit {
     this.quantity = 1;
   }
 
-  removeFromCart(itemId: number) {
-    this.cartService.removeFromCart(itemId); // Use CartService to remove from cart
-    this.selectedItems = this.cartService.getCartItems(); // Update local cart items
-    this.updateTotal(); // Update total after removing item
+  removeFromCart(itemId: number): void  {
+    this.cartService.removeFromCart(itemId);
+    this.selectedItems = this.cartService.getCartItems();
+    this.updateTotal();
   }
 
-  updateTotal() {
+  updateTotal(): void  {
     this.totalAmount = this.cartService.getTotalAmount();
   }
 
-  proceedToPayment() {
+  proceedToPayment(): void  {
     this.showPaymentModal = true;
   }
 
-  onConfirmOrder() {
+  onConfirmOrder(): void  {
     const orderPayload = {
       items: this.selectedItems
     };
@@ -112,24 +106,17 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  cancelOrder() {
+  cancelOrder(): void  {
     this.resetOrderForm();
   }
 
-  resetOrderForm() {
-    this.cartService.clearCart(); // Clear the cart in the service
+  resetOrderForm(): void  {
+    this.cartService.clearCart();
     this.selectedItems = [];
     this.selectedItemId = null;
     this.quantity = 1;
     this.totalAmount = 0;
     this.showPayment = false;
-
-    // Reset payment fields
-    this.cardHolder = '';
-    this.cardNumber = '';
-    this.cardExpMonth = '';
-    this.cardExpYear = '';
-    this.cardCvv = '';
   }
 
   get taxAmount(): number {
@@ -144,7 +131,7 @@ export class OrdersComponent implements OnInit {
     return parseFloat(price);
   }
 
-  goToDashboard() {
+  goToDashboard(): void  {
     this.router.navigate(['/dashboard']);
   }
 }
